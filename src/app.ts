@@ -1,5 +1,5 @@
 import express from "express";
-import { config_env } from "./config";
+import { config_env } from "./utils/config";
 import { routes } from './routes';
 
 // Inicializando o express
