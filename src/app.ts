@@ -1,5 +1,7 @@
 import express from "express";
+import "express-async-errors";
 import { config_env } from "./utils/config";
+import { errorInterceptor } from "./middlewares/errorInterceptor";
 import { routes } from './routes';
 
 // Inicializando o express
@@ -10,6 +12,7 @@ const hostname = config_env.hostname;
 
 // Middlewares
 app.use(express.json());
+app.use(errorInterceptor);
 app.use(routes);
 
 // Inicializando o servidor
