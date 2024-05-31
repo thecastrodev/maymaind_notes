@@ -12,8 +12,8 @@ const hostname = config_env.hostname;
 
 // Middlewares
 app.use(express.json());
-app.use(errorInterceptor);
 app.use(routes);
+app.use(errorInterceptor);
 
 // Inicializando o servidor
 app.listen(port, hostname, () => console.log(`Server running at http://${hostname}:${port}/`));
