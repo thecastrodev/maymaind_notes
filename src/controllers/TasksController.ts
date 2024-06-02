@@ -6,26 +6,27 @@ import z from "zod";
 export class TasksController {
   async create(request: Request, response: Response) {
     /*
-      #swagger.tags = ['Task']
+      #swagger.tags = ['Tasks']
       #swagger.requestBody = {
         required: true,
         content: {
           "application/json": {
             schema: {
               $ref: "#/components/schemas/TaskRegister"
-            }  
+            }
           }
         }
       }
       #swagger.responses[201] = {
+        description: "Task created successfully",
         content: {
           "application/json": {
-            schema:{
+            schema: {
               $ref: "#/components/schemas/DefaultResponse"
             }
-          }           
+          }
         }
-      }   
+      }
     */
     const bodySchema = z.object({
       title: z.string().min(3).max(255),
@@ -44,17 +45,23 @@ export class TasksController {
 
   async show(request: Request, response: Response) {
     /*
-      #swagger.tags = ['Task']
-      #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery']
-      #swagger.responses[201] = {
+      #swagger.tags = ['Tasks']
+      #swagger.parameters['id'] = {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" }
+      }
+      #swagger.responses[200] = {
+        description: "Task retrieved successfully",
         content: {
           "application/json": {
-            schema:{
+            schema: {
               $ref: "#/components/schemas/TaskResponse"
             }
-          }           
+          }
         }
-      }   
+      }
     */
     const { task_id } = request.params;
 
@@ -69,12 +76,16 @@ export class TasksController {
 
   async list(request: Request, response: Response) {
     /*
-    #swagger.tags = ['Task']
-    #swagger.responses[200] = {
+      #swagger.tags = ['Tasks']
+      #swagger.responses[200] = {
+        description: "Tasks retrieved successfully",
         content: {
           "application/json": {
-            schema:{
-              $ref: "#/components/schemas/TaskResponse"
+            schema: {
+              type: "array",
+              items: {
+                $ref: "#/components/schemas/TaskResponse"
+              }
             }
           }
         }
@@ -87,37 +98,43 @@ export class TasksController {
 
   async update(request: Request, response: Response) {
     /*
-    #swagger.tags = ['Task']
-    #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery'] 
-    #swagger.requestBody = {
-      required: true,
-      content: {
-        "application/json": {
-          schema: {
-            $ref: "#/components/schemas/TaskRegister"
-          }  
-        }
+      #swagger.tags = ['Tasks']
+      #swagger.parameters['id'] = {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" }
       }
-    } 
-    /*
-    #swagger.responses[200] = {
+      #swagger.requestBody = {
+        required: true,
         content: {
           "application/json": {
-            schema:{
+            schema: {
+              $ref: "#/components/schemas/TaskPatch"
+            }
+          }
+        }
+      }
+      #swagger.responses[200] = {
+        description: "Task updated successfully",
+        content: {
+          "application/json": {
+            schema: {
               $ref: "#/components/schemas/TaskResponse"
             }
           }
         }
       }
-    #swagger.responses[400] = {
-      content: {
-        "application/json": {
-          schema:{
-            $ref: "#/components/schemas/DefaultResponse"
+      #swagger.responses[400] = {
+        description: "Invalid request",
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/DefaultResponse"
+            }
           }
-        }           
+        }
       }
-    }
     */
     const bodySchema = z.object({
       title: z.string().min(3).max(255).nullish(),
@@ -149,12 +166,18 @@ export class TasksController {
 
   async delete(request: Request, response: Response) {
     /*
-    #swagger.tags = ['Task']
-    #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery'] 
-    #swagger.responses[200] = {
+      #swagger.tags = ['Tasks']
+      #swagger.parameters['id'] = {
+        name: "id",
+        in: "query",
+        required: true,
+        schema: { type: "string" }
+      }
+      #swagger.responses[200] = {
+        description: "Task deleted successfully",
         content: {
           "application/json": {
-            schema:{
+            schema: {
               $ref: "#/components/schemas/DefaultResponse"
             }
           }
