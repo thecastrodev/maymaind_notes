@@ -4,9 +4,11 @@
   "description": "A notes app made to remember things",
   "main": "index.js",
   "scripts": {
-    "start": "tsx  --env-file=.env src/app.ts",
+    "build": "npx tsc",
+    "start": "node --env-file=.env dist/app.js",
     "dev": "tsx watch --env-file=.env src/app.ts",
-    "test": "mocha --import=tsx src/__tests__/*.test.ts --env-file=.env --exit"
+    "test": "mocha --import=tsx src/__tests__/*.test.ts --env-file=.env --exit",
+    "swagger": "npx tsx src/libs/swagger.ts"
   },
   "engines": {
     "node": "20"
@@ -20,16 +22,23 @@
   "license": "ISC",
   "dependencies": {
     "@prisma/client": "^5.14.0",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
+    "swagger-autogen": "^2.23.7",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/chai": "^4.3.16",
+    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/mocha": "^10.0.6",
     "@types/node": "^20.12.12",
     "@types/supertest": "^6.0.2",
+    "@types/swagger-jsdoc": "^6.0.4",
+    "@types/swagger-ui-express": "^4.1.6",
     "chai": "^5.1.1",
     "mocha": "^10.4.0",
     "prisma": "^5.14.0",

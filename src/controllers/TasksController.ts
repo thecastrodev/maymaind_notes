@@ -5,6 +5,28 @@ import z from "zod";
 
 export class TasksController {
   async create(request: Request, response: Response) {
+    /*
+      #swagger.tags = ['Task']
+      #swagger.requestBody = {
+        required: true,
+        content: {
+          "application/json": {
+            schema: {
+              $ref: "#/components/schemas/TaskRegister"
+            }  
+          }
+        }
+      }
+      #swagger.responses[201] = {
+        content: {
+          "application/json": {
+            schema:{
+              $ref: "#/components/schemas/DefaultResponse"
+            }
+          }           
+        }
+      }   
+    */
     const bodySchema = z.object({
       title: z.string().min(3).max(255),
       description: z.string().min(3).max(255),
@@ -21,6 +43,19 @@ export class TasksController {
   }
 
   async show(request: Request, response: Response) {
+    /*
+      #swagger.tags = ['Task']
+      #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery']
+      #swagger.responses[201] = {
+        content: {
+          "application/json": {
+            schema:{
+              $ref: "#/components/schemas/TaskResponse"
+            }
+          }           
+        }
+      }   
+    */
     const { task_id } = request.params;
 
     const task = await prisma.task.findUnique({ where: { id: task_id } });
@@ -33,12 +68,57 @@ export class TasksController {
   }
 
   async list(request: Request, response: Response) {
+    /*
+    #swagger.tags = ['Task']
+    #swagger.responses[200] = {
+        content: {
+          "application/json": {
+            schema:{
+              $ref: "#/components/schemas/TaskResponse"
+            }
+          }
+        }
+      }
+    */
     const tasks = await prisma.task.findMany();
 
     response.json( tasks );
   }
 
   async update(request: Request, response: Response) {
+    /*
+    #swagger.tags = ['Task']
+    #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery'] 
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/TaskRegister"
+          }  
+        }
+      }
+    } 
+    /*
+    #swagger.responses[200] = {
+        content: {
+          "application/json": {
+            schema:{
+              $ref: "#/components/schemas/TaskResponse"
+            }
+          }
+        }
+      }
+    #swagger.responses[400] = {
+      content: {
+        "application/json": {
+          schema:{
+            $ref: "#/components/schemas/DefaultResponse"
+          }
+        }           
+      }
+    }
+    */
     const bodySchema = z.object({
       title: z.string().min(3).max(255).nullish(),
       description: z.string().min(3).max(255).nullish(),
@@ -68,6 +148,19 @@ export class TasksController {
   }
 
   async delete(request: Request, response: Response) {
+    /*
+    #swagger.tags = ['Task']
+    #swagger.parameters['$ref'] = [ '#/components/parameters/IdTaskQuery'] 
+    #swagger.responses[200] = {
+        content: {
+          "application/json": {
+            schema:{
+              $ref: "#/components/schemas/DefaultResponse"
+            }
+          }
+        }
+      }
+    */
     const { task_id } = request.params;
 
     await prisma.task.delete({ where: { id: task_id } });

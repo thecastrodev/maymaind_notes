@@ -4,7 +4,9 @@ import taskRoutes from './taskRoutes';
 
 const routes = Router();
 
+routes.use("/tasks", taskRoutes/*
+#swagger.tags=["Task"]
+*/);
 routes.use("/ping", checkRoutes);
-routes.use("/tasks", taskRoutes);
 
 export { routes };
