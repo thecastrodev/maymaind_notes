@@ -5,29 +5,6 @@ import z from "zod";
 
 export class TasksController {
   async create(request: Request, response: Response) {
-    /*
-      #swagger.tags = ['Tasks']
-      #swagger.requestBody = {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TaskRegister"
-            }
-          }
-        }
-      }
-      #swagger.responses[201] = {
-        description: "Task created successfully",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/DefaultResponse"
-            }
-          }
-        }
-      }
-    */
     const bodySchema = z.object({
       title: z.string().min(3).max(255),
       description: z.string().min(3).max(255),
@@ -44,25 +21,6 @@ export class TasksController {
   }
 
   async show(request: Request, response: Response) {
-    /*
-      #swagger.tags = ['Tasks']
-      #swagger.parameters['id'] = {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" }
-      }
-      #swagger.responses[200] = {
-        description: "Task retrieved successfully",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TaskResponse"
-            }
-          }
-        }
-      }
-    */
     const { task_id } = request.params;
 
     const task = await prisma.task.findUnique({ where: { id: task_id } });
@@ -75,67 +33,12 @@ export class TasksController {
   }
 
   async list(request: Request, response: Response) {
-    /*
-      #swagger.tags = ['Tasks']
-      #swagger.responses[200] = {
-        description: "Tasks retrieved successfully",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: {
-                $ref: "#/components/schemas/TaskResponse"
-              }
-            }
-          }
-        }
-      }
-    */
     const tasks = await prisma.task.findMany();
 
     response.json( tasks );
   }
 
   async update(request: Request, response: Response) {
-    /*
-      #swagger.tags = ['Tasks']
-      #swagger.parameters['id'] = {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" }
-      }
-      #swagger.requestBody = {
-        required: true,
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TaskPatch"
-            }
-          }
-        }
-      }
-      #swagger.responses[200] = {
-        description: "Task updated successfully",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/TaskResponse"
-            }
-          }
-        }
-      }
-      #swagger.responses[400] = {
-        description: "Invalid request",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/DefaultResponse"
-            }
-          }
-        }
-      }
-    */
     const bodySchema = z.object({
       title: z.string().min(3).max(255).nullish(),
       description: z.string().min(3).max(255).nullish(),
@@ -165,25 +68,6 @@ export class TasksController {
   }
 
   async delete(request: Request, response: Response) {
-    /*
-      #swagger.tags = ['Tasks']
-      #swagger.parameters['id'] = {
-        name: "id",
-        in: "query",
-        required: true,
-        schema: { type: "string" }
-      }
-      #swagger.responses[200] = {
-        description: "Task deleted successfully",
-        content: {
-          "application/json": {
-            schema: {
-              $ref: "#/components/schemas/DefaultResponse"
-            }
-          }
-        }
-      }
-    */
     const { task_id } = request.params;
 
     await prisma.task.delete({ where: { id: task_id } });

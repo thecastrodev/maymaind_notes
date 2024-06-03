@@ -10,7 +10,7 @@
 *.log
 *.log.*
 *.log-*
-./dist
+dist/
 
 # Exclude specific dotfiles that we want to track.
 !deps/**/.*

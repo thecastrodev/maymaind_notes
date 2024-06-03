@@ -4,8 +4,8 @@ import { config_env } from "../utils/config";
 const doc = {
   info: {
     version: "v1.0.0",
-    title: "Library",
-    description: "A simple book reservation system.",
+    title: "My Tasks",
+    description: "A simple task manager.",
   },
   servers: [
     {
@@ -22,81 +22,32 @@ const doc = {
       name: "Tasks",
       description: "Endpoints related to task management",
     },
+    {
+      name: "Check",
+      description: "Endpoints for check safety api",
+    },
   ],
   components: {
     schemas: {
       DefaultResponse: {
-        type: "object",
-        properties: {
-          message: {
-            type: "string",
-            example: "message",
-          },
-        },
+        message: "message",
       },
       TaskRegister: {
-        type: "object",
-        required: ["title", "description", "state"],
-        properties: {
-          title: {
-            type: "string",
-            example: "title",
-          },
-          description: {
-            type: "string",
-            example: "description",
-          },
-          state: {
-            type: "string",
-            enum: ["pending", "doing", "done"],
-            example: "pending",
-          },
-        },
+        $title: "username",
+        $description: "name",
+        $state: "pending",
       },
       TaskPatch: {
-        type: "object",
-        properties: {
-          title: {
-            type: "string",
-            example: "title",
-          },
-          description: {
-            type: "string",
-            example: "description",
-          },
-          state: {
-            type: "string",
-            enum: ["pending", "doing", "done"],
-            example: "doing",
-          },
-        },
+        title: "username",
+        description: "name",
+        state: "pending",
       },
       TaskResponse: {
-        type: "object",
-        properties: {
-          id: {
-            type: "string",
-            example: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
-          },
-          title: {
-            type: "string",
-            example: "title",
-          },
-          description: {
-            type: "string",
-            example: "description",
-          },
-          state: {
-            type: "string",
-            enum: ["pending", "doing", "done"],
-            example: "pending",
-          },
-          createdAt: {
-            type: "string",
-            format: "date",
-            example: "2024-06-01",
-          },
-        },
+        $id: "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892",
+        $title: "username",
+        $description: "name",
+        $state: "pending",
+        $createdAt: "year-mouth-day",
       },
     },
     parameters: {
@@ -106,7 +57,14 @@ const doc = {
         schema: {
           type: "string",
         },
-        required: true,
+      },
+      States: {
+        name: "state",
+        in: "query",
+        schema: {
+          type: "string",
+          enum: ["pending", "doing", "done"],
+        },
       },
     },
   },
@@ -121,5 +79,5 @@ const outputFile = "./swagger_output.json";
 const endpointsFiles = ["../app.ts"];
 
 swaggerAutogen(options)(outputFile, endpointsFiles, doc).then(() => {
-  console.log('Swagger documentation generated successfully');
+  console.log("Swagger documentation generated successfully");
 });

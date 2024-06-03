@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "version": "v1.0.0",
-    "title": "Library",
-    "description": "A simple book reservation system."
+    "title": "My Tasks",
+    "description": "A simple task manager."
   },
   "servers": [
     {
@@ -19,16 +19,30 @@
     {
       "name": "Tasks",
       "description": "Endpoints related to task management"
+    },
+    {
+      "name": "Check",
+      "description": "Endpoints for check safety api"
     }
   ],
   "paths": {
-    "/ping/": {
+    "/api/check/ping": {
       "get": {
         "tags": [
-          "Tasks"
+          "Check"
         ],
         "description": "",
         "responses": {
+          "200": {
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "description": "OK"
+          },
           "400": {
             "description": "Solicitação Inválida"
           },
@@ -38,13 +52,26 @@
         }
       }
     },
-    "/tasks/": {
+    "/api/tasks/list": {
       "get": {
         "tags": [
           "Tasks"
         ],
         "description": "",
         "responses": {
+          "200": {
+            "description": "Tasks retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TaskResponse"
+                  }
+                }
+              }
+            }
+          },
           "400": {
             "description": "Solicitação Inválida"
           },
@@ -52,23 +79,45 @@
             "description": "Erro Interno do Servidor"
           }
         }
-      },
+      }
+    },
+    "/api/tasks/register": {
       "post": {
         "tags": [
           "Tasks"
         ],
         "description": "",
         "responses": {
+          "201": {
+            "description": "Task created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Solicitação Inválida"
           },
           "500": {
             "description": "Erro Interno do Servidor"
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskRegister"
+              }
+            }
+          }
         }
       }
     },
-    "/tasks/{task_id}": {
+    "/api/tasks/show/{task_id}": {
       "get": {
         "tags": [
           "Tasks"
@@ -76,8 +125,8 @@
         "description": "",
         "parameters": [
           {
-            "name": "task_id",
-            "in": "path",
+            "name": "id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
@@ -85,6 +134,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Task retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Solicitação Inválida"
           },
@@ -92,7 +151,9 @@
             "description": "Erro Interno do Servidor"
           }
         }
-      },
+      }
+    },
+    "/api/tasks/update/{task_id}": {
       "patch": {
         "tags": [
           "Tasks"
@@ -100,8 +161,8 @@
         "description": "",
         "parameters": [
           {
-            "name": "task_id",
-            "in": "path",
+            "name": "id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
@@ -109,14 +170,43 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Task updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TaskResponse"
+                }
+              }
+            }
+          },
           "400": {
-            "description": "Solicitação Inválida"
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            }
           },
           "500": {
             "description": "Erro Interno do Servidor"
           }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TaskPatch"
+              }
+            }
+          }
         }
-      },
+      }
+    },
+    "/api/tasks/delete/{task_id}": {
       "delete": {
         "tags": [
           "Tasks"
@@ -124,8 +214,8 @@
         "description": "",
         "parameters": [
           {
-            "name": "task_id",
-            "in": "path",
+            "name": "id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
@@ -133,6 +223,16 @@
           }
         ],
         "responses": {
+          "200": {
+            "description": "Task deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DefaultResponse"
+                }
+              }
+            }
+          },
           "400": {
             "description": "Solicitação Inválida"
           },
@@ -148,262 +248,82 @@
       "DefaultResponse": {
         "type": "object",
         "properties": {
-          "type": {
+          "message": {
             "type": "string",
-            "example": "object"
-          },
-          "properties": {
-            "type": "object",
-            "properties": {
-              "message": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "message"
-                  }
-                }
-              }
-            }
+            "example": "message"
           }
         }
       },
       "TaskRegister": {
         "type": "object",
         "properties": {
-          "type": {
+          "title": {
             "type": "string",
-            "example": "object"
+            "example": "username"
           },
-          "required": {
-            "type": "array",
-            "example": [
-              "title",
-              "description",
-              "state"
-            ],
-            "items": {
-              "type": "string"
-            }
+          "description": {
+            "type": "string",
+            "example": "name"
           },
-          "properties": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "title"
-                  }
-                }
-              },
-              "description": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "description"
-                  }
-                }
-              },
-              "state": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "enum": {
-                    "type": "array",
-                    "example": [
-                      "pending",
-                      "doing",
-                      "done"
-                    ],
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "pending"
-                  }
-                }
-              }
-            }
+          "state": {
+            "type": "string",
+            "example": "pending"
           }
-        }
+        },
+        "required": [
+          "title",
+          "description",
+          "state"
+        ]
       },
       "TaskPatch": {
         "type": "object",
         "properties": {
-          "type": {
+          "title": {
             "type": "string",
-            "example": "object"
+            "example": "username"
           },
-          "properties": {
-            "type": "object",
-            "properties": {
-              "title": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "title"
-                  }
-                }
-              },
-              "description": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "description"
-                  }
-                }
-              },
-              "state": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "enum": {
-                    "type": "array",
-                    "example": [
-                      "pending",
-                      "doing",
-                      "done"
-                    ],
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "doing"
-                  }
-                }
-              }
-            }
+          "description": {
+            "type": "string",
+            "example": "name"
+          },
+          "state": {
+            "type": "string",
+            "example": "pending"
           }
         }
       },
       "TaskResponse": {
         "type": "object",
         "properties": {
-          "type": {
+          "id": {
             "type": "string",
-            "example": "object"
+            "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
           },
-          "properties": {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "a0fbbdeb-fee6-4e58-bec7-8ef84e55a892"
-                  }
-                }
-              },
-              "title": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "title"
-                  }
-                }
-              },
-              "description": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "description"
-                  }
-                }
-              },
-              "state": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "enum": {
-                    "type": "array",
-                    "example": [
-                      "pending",
-                      "doing",
-                      "done"
-                    ],
-                    "items": {
-                      "type": "string"
-                    }
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "pending"
-                  }
-                }
-              },
-              "createdAt": {
-                "type": "object",
-                "properties": {
-                  "type": {
-                    "type": "string",
-                    "example": "string"
-                  },
-                  "format": {
-                    "type": "string",
-                    "example": "date"
-                  },
-                  "example": {
-                    "type": "string",
-                    "example": "2024-06-01"
-                  }
-                }
-              }
-            }
+          "title": {
+            "type": "string",
+            "example": "username"
+          },
+          "description": {
+            "type": "string",
+            "example": "name"
+          },
+          "state": {
+            "type": "string",
+            "example": "pending"
+          },
+          "createdAt": {
+            "type": "string",
+            "example": "year-mouth-day"
           }
-        }
+        },
+        "required": [
+          "id",
+          "title",
+          "description",
+          "state",
+          "createdAt"
+        ]
       }
     },
     "parameters": {
@@ -412,8 +332,19 @@
         "in": "query",
         "schema": {
           "type": "string"
-        },
-        "required": true
+        }
+      },
+      "States": {
+        "name": "state",
+        "in": "query",
+        "schema": {
+          "type": "string",
+          "enum": [
+            "pending",
+            "doing",
+            "done"
+          ]
+        }
       }
     }
   }
