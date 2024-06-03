@@ -6,7 +6,7 @@ import { app } from "../app";
 describe("Test health check", () => {
   it("should request ping and respond pong", async () => {
     const response = await supertest(app)
-    .get('/ping')
+    .get('/api/check/ping')
     .expect(200)
 
     expect(response.text).to.be.equal('pong\n');

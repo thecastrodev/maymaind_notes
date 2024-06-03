@@ -10,7 +10,7 @@ import swaggerOutput from "./libs/swagger_output.json";
 import cors from "cors";
 
 // Inicializando o express
-const app = express();
+export const app = express();
 app.use(errorInterceptor);
 
 const port = config_env.port;
